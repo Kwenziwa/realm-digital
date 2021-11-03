@@ -26,18 +26,24 @@ class WishController extends Controller
         $clientdatas =  Helpers::GetApi('https://interview-assessment-1.realmdigital.co.za/employees');
 
        foreach($clientdatas as $clientdata) {
-            $employee = new Employee();
-            $employee->employee_id = $clientdata['id'];
-            $employee->name = $clientdata['name'];
-            $employee->lastname = $clientdata['lastname'];
-            $employee->dateOfBirth = $clientdata['dateOfBirth'];
-            $employee->employmentStartDate = $clientdata['employmentStartDate'];
-            $employee->employmentEndDate = $clientdata['employmentEndDate'];
 
-            if(isset($clientdata['lastNotification'])) {
-                $employee->lastNotification = $clientdata['lastNotification'];
+            if(isset($clientdata['name'])) {
+
+                $employee = new Employee();
+                $employee->employee_id = $clientdata['id'];
+                $employee->name = $clientdata['name'];
+                $employee->lastname = $clientdata['lastname'];
+                $employee->dateOfBirth = $clientdata['dateOfBirth'];
+                $employee->employmentStartDate = $clientdata['employmentStartDate'];
+                $employee->employmentEndDate = $clientdata['employmentEndDate'];
+
+                if(isset($clientdata['lastNotification'])) {
+                    $employee->lastNotification = $clientdata['lastNotification'];
+                }
+                $employee->save();
+
             }
-            $employee->save();
+
 
          }
     }
@@ -87,7 +93,7 @@ class WishController extends Controller
 
          }
 
-         $details = [ 'names' => $names, 'wishes_type' => Helpers::wishTitleTypeArray($wish_type), 'body' => Helper::wishBodyTypeArray($wish_type)];
+         $details = [ 'names' => $names, 'wishes_type' => Helpers::wishTitleTypeArray($wish_type), 'body' => Helpers::wishBodyTypeArray($wish_type)];
 
         \Mail::to('kwenziwa@live.com')->send(new SendMail($details));
 
